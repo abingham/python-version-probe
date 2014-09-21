@@ -24,12 +24,13 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
     install_requires=[
+        'baker',
         'with_fixture',
     ],
     long_description=long_description,
     entry_points={
-        # 'console_scripts': [
-        #     'python_version_probe = version_probe.app:main',
-        # ],
+        'console_scripts': [
+            'python_version_probe = version_probe.app:main',
+        ],
     },
 )
