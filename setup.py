@@ -9,10 +9,10 @@ setup(
     name="version_probe",
     packages=["version_probe"],
     version="{version}".format(version=version),
-    description="Gathering metrics in codebases over time.",
+    description="Probe Python source code for language version.",
     author="Austin Bingham",
     author_email="austin@sixty-north.com",
-    # url="http://code.sixty-north.com/version_probe",
+    # url="http://code.sixty-north.com/python_version_probe",
     # download_url="".format(version=version),
     keywords=["Python"],
     license="MIT License",
@@ -32,7 +32,7 @@ setup(
     long_description=long_description,
     entry_points={
         # 'console_scripts': [
-        #     'version_probe = version_probe.app:main',
+        #     'python_version_probe = version_probe.app:main',
         # ],
     },
 )

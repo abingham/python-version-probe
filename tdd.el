@@ -1,9 +1,17 @@
 ;; -*- lexical-binding: t -*-
 
+;; Eval this buffer to turn on TDD-esque test automation in
+;; emacs. Basically, whever you save a file under in the project, this
+;; will run the tests.  You'll probably need to modify the "rootdir"
+;; value to make this work for your machine.
+;;
+;; Note that tests currently run very slowly because they each have to
+;; spawn a process. Hmmm...
+
 (require 'deferred)
 
 (defun version-probe-tests ()
-  (lexical-let ((rootdir "/Users/sixtynorth/projects/version_probe")
+  (lexical-let ((rootdir "/Users/sixtynorth/projects/python_version_probe")
         ;;(dir (file-name-directory load-file-name))
         (filename (buffer-file-name (current-buffer)))
         (output-buffer "*version-probe-buffer*"))
