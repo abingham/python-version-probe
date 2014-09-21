@@ -1,12 +1,38 @@
+;; -*- lexical-binding: t -*-
+
+(require 'deferred)
+
 (defun version-probe-tests ()
-  (let ((rootdir "/Users/sixtynorth/projects/version_probe")
+  (lexical-let ((rootdir "/Users/sixtynorth/projects/version_probe")
         ;;(dir (file-name-directory load-file-name))
         (filename (buffer-file-name (current-buffer)))
         (output-buffer "*version-probe-buffer*"))
     (when (string-prefix-p rootdir filename)
-      (display-buffer output-buffer)
-      (shell-command (format "cd %s && python3 -m unittest discover version_probe/test" rootdir) output-buffer)
+      (get-buffer-create output-buffer)
+      
       (with-current-buffer output-buffer
-        (compilation-mode 1)))))
+        (read-only-mode 0)
+        (erase-buffer))
+      
+      (deferred:$
+
+        (deferred:$
+          (deferred:process-shell
+            (format "cd %s && python3 -m unittest discover version_probe/test" rootdir)))
+
+        ;; error
+        (deferred:error it
+          (lambda (err) (error-message-string err)))
+
+        ;; finally
+        (deferred:nextc it
+          (lambda (x) x))
+        
+        (deferred:nextc it
+          (lambda (output)
+            (with-current-buffer output-buffer
+              (insert output)
+              (compilation-mode 1))
+            (display-buffer output-buffer)))))))
 
 (add-hook 'after-save-hook 'version-probe-tests)
