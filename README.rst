@@ -5,44 +5,48 @@
 A tool for detecting the Python major version for a body of source
 code.
 
+Installation
+============
+
+Install with *pip*::
+
+    pip install python_version_probe
+
+
+*easy_install*::
+
+
+    easy_install python_version_probe
+
+
+or manually::
+
+    python setup.py install
+   
 Quickstart
 ==========
 
-Install with `pip`:
-```
-pip install python_version_probe
-```
-`easy_install`:
-```
-easy_install python_version_probe
-```
-or manually:
-```
-python setup.py install
-```
+You can use the API::
 
-You can use the API:
 
-```
-from version_probe import detect_version
+    from version_probe import detect_version
 
-# Find the version used in sources files under ~/projects/ipv7
-v = detect_version("~/projects/ipv7")
+    # Find the version used in sources files under ~/projects/ipv7
+    v = detect_version("~/projects/ipv7")
 
-# something so advanced is, of course, written in Python 3
-assert v == 3
+    # something so advanced is, of course, written in Python 3
+    assert v == 3
 
-v = detect_version("/opt/old_project")
-assert v == 2
+    v = detect_version("/opt/old_project")
+    assert v == 2
 
-try:
-    detect_version("~/projects/experimental")
-except ValueError as e:
-    print("Syntax error detected in the experimental project: {}".format(e))
-```
+    try:
+        detect_version("~/projects/experimental")
+    except ValueError as e:
+        print("Syntax error detected in the experimental project: {}".format(e))
 
-or the `python_version_probe` command-line tool:
-```
-% python_version_probe /projects/nuclear_launch_control
-3
-```
+or the `python_version_probe` command-line tool::
+
+
+    % python_version_probe /projects/nuclear_launch_control
+    3
