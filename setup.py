@@ -12,7 +12,7 @@ setup(
     description="Probe Python source code for language version.",
     author="Austin Bingham",
     author_email="austin@sixty-north.com",
-    # url="http://code.sixty-north.com/python_version_probe",
+    url="http://github.com/abingham/python-version-probe",
     # download_url="".format(version=version),
     keywords=["Python"],
     license="MIT License",
