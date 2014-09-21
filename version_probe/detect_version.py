@@ -15,12 +15,14 @@ def detect_version(filename):
         ValueError: If a parsing error is detected.
     """
 
+    filename = os.path.expanduser(filename)
+
     with open(os.devnull, 'w') as devnull:
         try:
             output = subprocess.check_output(['2to3', filename],
                                              stderr=devnull)
-        except subprocess.CalledProcessError:
-            raise ValueError('Error parsing {}'.format(filename))
+        except subprocess.CalledProcessError as e:
+            raise ValueError('Error parsing {}: {}'.format(filename, e))
 
     changes = [o for o in output.split(b'\n') if len(o)]
     return 2 if len(changes) else 3
