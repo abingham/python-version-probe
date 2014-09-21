@@ -28,6 +28,7 @@ setup(
         # "Topic :: Experimentation",
         ],
     install_requires=[
+        'with_fixture',
     ],
     long_description=long_description,
     entry_points={

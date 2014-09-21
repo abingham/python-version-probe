@@ -3,47 +3,56 @@ import tempfile
 import unittest
 
 import version_probe
+import with_fixture
 
 
-class TestFiles(unittest.TestCase):
+class TestFiles(with_fixture.TestCase):
+    def withFixture(self):
+        with tempfile.NamedTemporaryFile(mode='w') as self.f:
+            yield
+
     def test_detects_python_v2(self):
-        with tempfile.NamedTemporaryFile(mode='w') as f:
-            f.write('print "llama"')
-            f.flush()
-            self.assertEqual(2, version_probe.detect_version(f.name))
+        self.f.write('print "llama"')
+        self.f.flush()
+        self.assertEqual(2, version_probe.detect_version(self.f.name))
 
     def test_detects_python_v3(self):
-        with tempfile.NamedTemporaryFile(mode='w') as f:
-            f.write('print("foobar")')
-            f.flush()
-            self.assertEqual(3, version_probe.detect_version(f.name))
+        self.f.write('print("foobar")')
+        self.f.flush()
+        self.assertEqual(3, version_probe.detect_version(self.f.name))
 
     def test_file_has_syntax_error(self):
-        with tempfile.NamedTemporaryFile(mode='w') as f:
-            f.write('x = "asdf')
-            f.flush()
-            with self.assertRaises(ValueError):
-                version_probe.detect_version(f.name)
+        self.f.write('x = "asdf')
+        self.f.flush()
+        with self.assertRaises(ValueError):
+            version_probe.detect_version(self.f.name)
 
 
-class TestDirectories(unittest.TestCase):
+class TestDirectories(with_fixture.TestCase):
+    def withFixture(self):
+        with tempfile.TemporaryDirectory() as self.temp_dir:
+            yield
+
+    def _write_to_file(self, contents, filename='test_file.py'):
+        filename = os.path.join(self.temp_dir, filename)
+        with open(filename, 'w') as f:
+            f.write(contents)
+
     def test_no_files(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            version = version_probe.detect_version(temp_dir)
-            self.assertEqual(version, 3)
+        version = version_probe.detect_version(self.temp_dir)
+        self.assertEqual(version, 3)
 
     def test_single_python_v2_file(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            filename = os.path.join(temp_dir, 'python_v2.py')
-            with open(filename, 'w') as f:
-                f.write('print "llamas"')
-            version = version_probe.detect_version(temp_dir)
-            self.assertEqual(version, 2)
+        self._write_to_file('print "llamas"')
+        version = version_probe.detect_version(self.temp_dir)
+        self.assertEqual(version, 2)
 
     def test_single_python_v3_file(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            filename = os.path.join(temp_dir, 'python_v3.py')
-            with open(filename, 'w') as f:
-                f.write('print("llamas")')
-            version = version_probe.detect_version(temp_dir)
-            self.assertEqual(version, 3)
+        self._write_to_file('print("llamas")')
+        version = version_probe.detect_version(self.temp_dir)
+        self.assertEqual(version, 3)
+
+    def test_syntax_error(self):
+        self._write_to_file('x = "asdf')
+        with self.assertRaises(ValueError):
+            version_probe.detect_version(self.temp_dir)
