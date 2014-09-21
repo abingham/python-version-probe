@@ -8,6 +8,21 @@ code.
 Quickstart
 ==========
 
+Install with `pip`:
+```
+pip install python_version_probe
+```
+`easy_install`:
+```
+easy_install python_version_probe
+```
+or manually:
+```
+python setup.py install
+```
+
+You can use the API:
+
 ```
 from version_probe import detect_version
 
@@ -24,4 +39,10 @@ try:
     detect_version("~/projects/experimental")
 except ValueError as e:
     print("Syntax error detected in the experimental project: {}".format(e))
+```
+
+or the `python_version_probe` command-line tool:
+```
+% python_version_probe /projects/nuclear_launch_control
+3
 ```
