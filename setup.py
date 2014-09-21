@@ -19,13 +19,9 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python",
-        # "Programming Language :: Python :: 3.4",
-        # "Environment :: Other Environment",
-        # "Intended Audience :: Developers",
-        # "License :: OSI Approved :: MIT License",
-        # "Operating System :: OS Independent",
-        # "Topic :: Software Development :: Libraries :: Python Modules",
-        # "Topic :: Experimentation",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
         ],
     install_requires=[
         'with_fixture',
