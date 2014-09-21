@@ -5,32 +5,32 @@ import unittest
 import version_probe
 
 
-class Test_detect_file_version(unittest.TestCase):
+class TestFiles(unittest.TestCase):
     def test_detects_python_v2(self):
         with tempfile.NamedTemporaryFile(mode='w') as f:
             f.write('print "llama"')
             f.flush()
-            self.assertEqual(2, version_probe.detect_file_version(f.name))
+            self.assertEqual(2, version_probe.detect_version(f.name))
 
     def test_detects_python_v3(self):
         with tempfile.NamedTemporaryFile(mode='w') as f:
             f.write('print("foobar")')
             f.flush()
-            self.assertEqual(3, version_probe.detect_file_version(f.name))
+            self.assertEqual(3, version_probe.detect_version(f.name))
 
     def test_file_has_syntax_error(self):
         with tempfile.NamedTemporaryFile(mode='w') as f:
             f.write('x = "asdf')
             f.flush()
             with self.assertRaises(ValueError):
-                version_probe.detect_file_version(f.name)
+                version_probe.detect_version(f.name)
 
 
-class TestDetectVersion(unittest.TestCase):
+class TestDirectories(unittest.TestCase):
     def test_no_files(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             version = version_probe.detect_version(temp_dir)
-            self.assertEqual(version, None)
+            self.assertEqual(version, 3)
 
     def test_single_python_v2_file(self):
         with tempfile.TemporaryDirectory() as temp_dir:
