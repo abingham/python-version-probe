@@ -15,8 +15,9 @@
         ;;(dir (file-name-directory load-file-name))
         (filename (buffer-file-name (current-buffer)))
         (output-buffer "*version-probe-tests*"))
-    (when (string-prefix-p rootdir filename)
-      (get-buffer-create output-buffer)
+    (when (and (string-prefix-p rootdir filename)
+	       (equal major-mode 'python-mode)
+	       (get-buffer-create output-buffer))
       
       (with-current-buffer output-buffer
         (read-only-mode 0)
