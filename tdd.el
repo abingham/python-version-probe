@@ -14,7 +14,7 @@
   (lexical-let ((rootdir "/Users/sixtynorth/projects/python_version_probe")
         ;;(dir (file-name-directory load-file-name))
         (filename (buffer-file-name (current-buffer)))
-        (output-buffer "*version-probe-buffer*"))
+        (output-buffer "*version-probe-tests*"))
     (when (string-prefix-p rootdir filename)
       (get-buffer-create output-buffer)
       
