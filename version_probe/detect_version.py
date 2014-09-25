@@ -23,7 +23,13 @@ class VersionDetector(refactor.RefactoringTool):
         refactor.RefactoringTool.__init__(self, *args, **kwargs)
 
         self._filters = []
-        self.output = []
+        self._output = []
+
+    @property
+    def output(self):
+        """The major-version differences detected during the refactoring run.
+        """
+        return self._output
 
     @property
     def filters(self):
