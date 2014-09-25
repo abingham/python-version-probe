@@ -69,6 +69,10 @@ class TestTuplePrinting(with_fixture.TestCase):
         self.f.flush()
         self.assertEqual(3, version_probe.detect_version(self.f.name,))
 
+    def test_embedded_print(self):
+        self.f.write('if True: print(1, 2)')
+        self.f.flush()
+        self.assertEqual(3, version_probe.detect_version(self.f.name,))
 
 if __name__ == '__main__':
     unittest.main()
