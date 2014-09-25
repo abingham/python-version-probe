@@ -1,6 +1,32 @@
-import os
-import os.path
-import subprocess
+# The initial version of this code was written by cjwelborn in
+# http://www.reddit.com/r/Python/comments/2h5pwa/version_probe_module_for_detecting_the_python/
+
+from lib2to3 import refactor
+from lib2to3.pgen2.parse import ParseError
+import sys
+
+
+class VersionDetector(refactor.RefactoringTool):
+    """A lib2to3 refactoring tool designed to detect if the code being
+    refactored is Python2 or Python3.
+
+    All it does is looks for any change suggestions. When sees them,
+    it takes that as an indication that the code is Python 2 (hence
+    the need to update it to Python 3.)
+
+    See: lib2to3.refactor.RefactoringTool
+         lib2to3.main.StdoutRefactoringTool
+    """
+
+    def __init__(self, *args, **kwargs):
+        refactor.RefactoringTool.__init__(self, *args, **kwargs)
+        self.output = []
+
+    def print_output(self, old_text, new_text, filename, equal):
+        # You don't really have to save the output.
+        # You could set a flag like: self.output = True
+        if not equal:
+            self.output.append(new_text)
 
 
 def detect_version(filename):
@@ -15,14 +41,20 @@ def detect_version(filename):
         ValueError: If a parsing error is detected.
     """
 
-    filename = os.path.expanduser(filename)
+    rt = VersionDetector(refactor.get_fixers_from_package('lib2to3.fixes'))
+    try:
+        # File to parse is the first argument given.
+        rt.refactor([filename])
+    except ParseError as ex:
+        parseval = getattr(ex, 'value', None)
+        if parseval in ('print', 'from', '**'):
+            # Happens when parsing Python3 files
+            # though this still needs investigating.
+            return 3
+        else:
+            raise ValueError('Syntax/ParseError: {}'.format(ex))
 
-    with open(os.devnull, 'w') as devnull:
-        try:
-            output = subprocess.check_output(['2to3', filename],
-                                             stderr=devnull)
-        except subprocess.CalledProcessError as e:
-            raise ValueError('Error parsing {}: {}'.format(filename, e))
-
-    changes = [o for o in output.split(b'\n') if len(o)]
-    return 2 if len(changes) else 3
+    if rt.output:
+        return 2
+    else:
+        return 3
