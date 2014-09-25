@@ -1,3 +1,5 @@
+`Travis CI <https://travis-ci.org/abingham/python-version-probe>`_ |build-status|
+
 ======================
  python version probe
 ======================
@@ -22,7 +24,7 @@ Install with *pip*::
 or manually::
 
     python setup.py install
-   
+
 Quickstart
 ==========
 
@@ -50,3 +52,10 @@ or the `python_version_probe` command-line tool::
 
     % python_version_probe /projects/nuclear_launch_control
     3
+
+.. Build status badge
+.. |build-status|
+   image:: https://secure.travis-ci.org/abingham/python-version-probe.png
+           ?branch=master
+   :target: http://travis-ci.org/abingham/python-version-probe
+   :alt: Build Status
