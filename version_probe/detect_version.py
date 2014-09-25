@@ -21,8 +21,20 @@ class VersionDetector(refactor.RefactoringTool):
 
     def __init__(self, *args, **kwargs):
         refactor.RefactoringTool.__init__(self, *args, **kwargs)
-        self.filters = []
+
+        self._filters = []
         self.output = []
+
+    @property
+    def filters(self):
+        """A sequence of filters that block outputs which don't actually
+        represent major-version differences.
+
+        Each filter in the sequence is called for each detected
+        output. If it returns `False`, then that output is not counted
+        as a change (i.e. it is not recorded in `output`.)
+        """
+        return self._filters
 
     def print_output(self, old_text, new_text, filename, equal):
         # You don't really have to save the output.
