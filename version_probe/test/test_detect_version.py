@@ -3,6 +3,7 @@ import tempfile
 import unittest
 
 import version_probe
+import version_probe.test.compat as compat
 import with_fixture
 
 
@@ -24,13 +25,13 @@ class TestFiles(with_fixture.TestCase):
     def test_file_has_syntax_error(self):
         self.f.write('x = "asdf')
         self.f.flush()
-        with self.assertRaises(ValueError):
+        with compat.assert_raises(self, ValueError):
             version_probe.detect_version(self.f.name)
 
 
 class TestDirectories(with_fixture.TestCase):
     def withFixture(self):
-        with tempfile.TemporaryDirectory() as self.temp_dir:
+        with compat.TemporaryDirectory() as self.temp_dir:
             yield
 
     def _write_to_file(self, contents, filename='test_file.py'):
@@ -54,5 +55,9 @@ class TestDirectories(with_fixture.TestCase):
 
     def test_syntax_error(self):
         self._write_to_file('x = "asdf')
-        with self.assertRaises(ValueError):
+        with compat.assert_raises(self, ValueError):
             version_probe.detect_version(self.temp_dir)
+
+
+if __name__ == '__main__':
+    unittest.main()
