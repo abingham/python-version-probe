@@ -1,5 +1,7 @@
 `Travis CI <https://travis-ci.org/abingham/python-version-probe>`_ |build-status|
 
+`Landscape.io <https://landscape.io/github/abingham/python-version-probe>`_ |code-health|
+
 ======================
  python version probe
 ======================
@@ -59,3 +61,9 @@ or the `python_version_probe` command-line tool::
            ?branch=master
    :target: http://travis-ci.org/abingham/python-version-probe
    :alt: Build Status
+
+.. Landscape health badge
+.. |code-health|
+   image:: https://landscape.io/github/abingham/python-version-probe/master/landscape.png
+   :target: https://landscape.io/github/abingham/python-version-probe
+   :alt: Code health
