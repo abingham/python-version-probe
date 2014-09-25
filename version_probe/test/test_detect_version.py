@@ -59,5 +59,16 @@ class TestDirectories(with_fixture.TestCase):
             version_probe.detect_version(self.temp_dir)
 
 
+class TestTuplePrinting(with_fixture.TestCase):
+    def withFixture(self):
+        with tempfile.NamedTemporaryFile(mode='w') as self.f:
+            yield
+
+    def test_isolated_print(self):
+        self.f.write('print(1, 2)')
+        self.f.flush()
+        self.assertEqual(3, version_probe.detect_version(self.f.name,))
+
+
 if __name__ == '__main__':
     unittest.main()

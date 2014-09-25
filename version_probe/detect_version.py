@@ -6,6 +6,19 @@ from lib2to3.pgen2.parse import ParseError
 import sys
 
 
+def filter_tuple_printing(old_text, new_text, filename, equal):
+    """This is a `VersionDetector` filter that tries to filter out the
+    cases where 2to3 'upgrades' tuple printing. For example, 2to3 will
+    turn `print(1, 2)` into `print((1,2))`. While this is technically
+    fine from 2to3's point of view, it doesn't necessarily represent a
+    version upgrade. This filter tries to deal with those.
+
+    """
+    if old_text.startswith('print(') and len(old_text) + 2 == len(new_text):
+        return False
+    else:
+        return True
+
 class VersionDetector(refactor.RefactoringTool):
     """A lib2to3 refactoring tool designed to detect if the code being
     refactored is Python2 or Python3.
@@ -20,13 +33,15 @@ class VersionDetector(refactor.RefactoringTool):
 
     def __init__(self, *args, **kwargs):
         refactor.RefactoringTool.__init__(self, *args, **kwargs)
+        self.filters = []
         self.output = []
 
     def print_output(self, old_text, new_text, filename, equal):
         # You don't really have to save the output.
         # You could set a flag like: self.output = True
         if not equal:
-            self.output.append(new_text)
+            if all(f(old_text, new_text, filename, equal) for f in self.filters):
+                self.output.append(new_text)
 
 
 def detect_version(filename):
@@ -42,6 +57,7 @@ def detect_version(filename):
     """
 
     rt = VersionDetector(refactor.get_fixers_from_package('lib2to3.fixes'))
+    rt.filters.append(filter_tuple_printing)
     try:
         # File to parse is the first argument given.
         rt.refactor([filename])
